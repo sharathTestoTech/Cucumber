@@ -1,4 +1,4 @@
-Feature: Rahul feature
+Feature: Rahul features
 
   @A1
   Scenario: Rahul Scenario
