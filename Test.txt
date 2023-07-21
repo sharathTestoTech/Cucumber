@@ -1,0 +1,486 @@
+Feature: Rahul feature
+
+  @A1
+  Scenario: Rahul Scenario
+  Given I am on "https://rahulshettyacademy.com/AutomationPractice/" url
+  When click on home page
+  And click on RadioButton one
+  And click on RadioButton two
+  And click on option1
+  
+
+
+package testRunner;
+
+import org.junit.runner.RunWith;
+
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+		features = "./features/Rahul.feature",
+		tags = "@A1",
+		glue = "steps",
+		monochrome = true,
+		dryRun = false,
+		plugin = {"pretty", "html:target/cucumber-reports.html", "json:target/cucumber-reports",
+				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
+		}
+		)
+
+public class TestRunner {
+
+}
+
+
+package steps;
+
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import pages.RahulPageObject;
+
+public class RahulStep  {
+
+	WebDriver driver;
+	RahulPageObject rahulPageObject;
+
+	@Before
+	public void Steup() {
+
+		if(driver==null) {
+			ChromeOptions option = new ChromeOptions();
+			option.addArguments("--remote-allow-origins=*");
+			driver = new ChromeDriver(option);
+		} 
+		rahulPageObject = new RahulPageObject(driver);
+ 
+	}
+
+	@Given("I am on {string} url")
+	public void i_am_on_url(String string) {
+
+		rahulPageObject.launchApp(string);
+	}
+
+	@When("click on home page")
+	public void click_on_home_page() throws InterruptedException {
+		rahulPageObject.homeClick();
+	}
+	
+	@And("click on RadioButton one")
+	public void click_on_radio_button_one() {
+		rahulPageObject.clickOnRadioButtonOne();
+	}
+	
+	
+	@And("click on RadioButton two")
+	public void click_on_radio_button_two() {
+		rahulPageObject.clickOnRadioButtonTwo();
+	}
+	
+	
+	@And("click on option1")
+	public void click_on_option1() {
+		rahulPageObject.clickOnOption1(); 
+		
+	}
+	
+	
+	 
+
+	@Given("select {string} from dropDown example")
+	public void select_from_drop_down_example(String option) {
+		rahulPageObject.selectOption(option);
+	}
+
+
+
+	
+	
+
+}
+
+
+
+
+
+package steps;
+
+import java.time.Duration;
+
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+public class RahulTestBase {
+
+	public static WebDriver driver;
+
+	public RahulTestBase(WebDriver driver) {
+		this.driver = driver;
+	}
+
+	public void clickRadioButton(WebElement ele) {
+
+		ele.click();
+
+	}
+
+	public void clickOnButton(WebElement ele) {
+
+		ele.click();
+
+	}
+
+	public void scrollDown(int points) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		String value = "window.scrollBy(0," + points + ")";
+		js.executeScript(value, "");
+	}
+
+	public void scrollUp(int points) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		String value = "window.scrollBy(0,-" + points + ")";
+		js.executeScript(value, "");
+	}
+	
+	public void scrollDownUntilElementVisible(WebElement element) {
+		
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		// Scrolling down the page till the element is found		
+        js.executeScript("arguments[0].scrollIntoView();", element);
+		
+	}
+	
+	public void scrollDownToBottomOfTheWebpage() {
+		  JavascriptExecutor js = (JavascriptExecutor) driver;
+		   js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+	}
+	
+	public void scrollHorizontallyOnWebPageToSpecificWebElement(WebElement element){
+		
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].scrollIntoView();", element);
+	}
+	
+	public void navigateBack() {
+		driver.navigate().back();
+	}
+	
+	
+	public void implicitWait(int seconds) {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
+		
+	}
+
+	public void selectByValue(String option, WebElement dropDownExample) {
+		
+		Select options=new Select(dropDownExample);
+		options.selectByValue(option);
+		
+	}
+	
+	
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+package pages;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
+
+import steps.RahulTestBase;
+
+public class RahulPageObject {
+
+	private WebDriver driver;
+	RahulTestBase rahulTestBase;
+
+ 
+
+	public RahulPageObject(WebDriver driver) {
+		this.driver=driver;
+		PageFactory.initElements(driver, this);
+		rahulTestBase = new RahulTestBase(driver);
+
+	}
+
+	@FindBy(xpath = "//*[@value='radio1']")
+	public WebElement radioButton1;
+	@FindBy(xpath = "//*[@value='radio2']")
+	public WebElement radioButton2;
+
+	@FindBy(xpath = "//button[text()='Home']")
+	public WebElement home;
+	
+	@FindBy(id="checkBoxOption1")
+	public WebElement checkBox1;
+	
+	@FindBy(id="dropdown-class-example")
+	public WebElement dropDownExample;
+	
+
+	
+
+	public void homeClick() throws InterruptedException {
+
+		rahulTestBase.clickOnButton(home);
+		Thread.sleep(3000);
+		rahulTestBase.navigateBack();
+
+	}
+
+	public void launchApp(String string) {
+		driver.get(string);
+		driver.manage().window().maximize();
+		
+	}
+
+	public void clickOnRadioButtonOne() {
+		
+		rahulTestBase.clickRadioButton(radioButton1);
+		Assert.assertEquals(true, radioButton1.isSelected());
+		
+	}
+
+	public void clickOnRadioButtonTwo() {
+		
+		rahulTestBase.clickRadioButton(radioButton2);
+		Assert.assertEquals(false, radioButton1.isSelected());
+		
+	}
+
+	public void clickOnOption1() {
+		
+		rahulTestBase.clickOnButton(checkBox1);
+		
+	}
+
+	public void selectOption(String option) {
+		
+		
+		rahulTestBase.selectByValue(option,dropDownExample);
+		
+	}
+
+
+
+}
+
+
+
+
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.dezlearn</groupId>
+	<artifactId>cucumber1</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>31.0.1-jre</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
+	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>7.2.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-junit -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>7.2.3</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-core -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-core</artifactId>
+			<version>7.2.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/gherkin -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>gherkin</artifactId>
+			<version>22.0.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-html -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-html</artifactId>
+			<version>0.2.7</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.cobertura/cobertura
+<dependency>
+<groupId>net.sourceforge.cobertura</groupId>
+<artifactId>cobertura</artifactId>
+<version>2.1.1</version>
+<scope>test</scope>
+</dependency> -->
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-jvm-deps -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-jvm-deps</artifactId>
+			<version>1.0.6</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/net.masterthought/cucumber-reporting -->
+		<dependency>
+			<groupId>net.masterthought</groupId>
+			<artifactId>cucumber-reporting</artifactId>
+			<version>5.6.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-core -->
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>2.2</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>4.1.3</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/tech.grasshopper/extentreports-cucumber7-adapter -->
+		<dependency>
+			<groupId>tech.grasshopper</groupId>
+			<artifactId>extentreports-cucumber7-adapter</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
+<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+<dependency>
+    <groupId>io.github.bonigarcia</groupId>
+    <artifactId>webdrivermanager</artifactId>
+    <version>5.3.3</version>
+</dependency>
+
+
+	</dependencies>
+
+
+	<build>
+		<pluginManagement>
+			<!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+			<plugins>
+				<!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.0.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.0</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.0.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
+				</plugin>
+				<!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.7.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>3.0.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+
+</project>
+
+
+
+
+
+
+
+
+
+
