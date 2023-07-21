@@ -1,4 +1,4 @@
-Feature: Rahul features
+Feature: Rahul features TestoTech
 
   @A1
   Scenario: Rahul Scenario
