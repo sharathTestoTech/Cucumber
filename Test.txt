@@ -1,4 +1,4 @@
-Feature: Rahul features TestoTech sharathkumar.e
+Feature: Rahul features TestoTech sharathkumar.E
 
   @A1
   Scenario: Rahul Scenario
